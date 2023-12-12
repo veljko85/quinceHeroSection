@@ -245,12 +245,13 @@
       let speedOfCar = 0.01
       function visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh) {
         //set iframe
-
+        document.getElementById("iframePlanet").src = "https://work.quincemedia.com/quicePlanetGame/";
         // move astronaut
         animatePosition(scene.getMeshByName('Astronaut_primitive0'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive0').position.x + 800, scene.getMeshByName('Astronaut_primitive0').position.y, scene.getMeshByName('Astronaut_primitive0').position.z), 0.3)
         animatePosition(scene.getMeshByName('Astronaut_primitive1'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive0').position.x + 800, scene.getMeshByName('Astronaut_primitive0').position.y, scene.getMeshByName('Astronaut_primitive0').position.z), 0.3)
         //start animation
         scene.registerBeforeRender(function speedCar() {
+         
           //SPEED CAR WHEN CLICKED
           //add speed
           speedOfCar += 0.001
@@ -303,7 +304,6 @@
                   });
                   setTimeout(() => {
                     document.getElementById("canvasZone").animate([{ opacity: 1 }, { opacity: 0 }], 2000);
-                    document.getElementById("iframePlanet").src = "https://work.quincemedia.com/quicePlanetGame/";
                     setTimeout(() => {
                       document.getElementById("canvasZone").style.display = "none"
                       document.getElementById("webGameIframe").style.zIndex = 2
