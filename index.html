@@ -305,11 +305,11 @@
                   setTimeout(() => {
                     document.getElementById("canvasZone").animate([{ opacity: 1 }, { opacity: 0 }], 2000);
                     setTimeout(() => {
-                      document.getElementById("canvasZone").style.display = "none"
                       document.getElementById("webGameIframe").style.zIndex = 2
                       document.getElementById("canvasZone").style.zIndex = 1
-                      // document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://work.quincemedia.com/quicePlanetGame/")
+                      document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://work.quincemedia.com/quicePlanetGame/")
                       scene.dispose()
+                      document.getElementById("canvasZone").style.display = "none"
                     }, 2000);
                   }, 5000);
                 }, 3000);
