@@ -181,34 +181,29 @@
         scene.beginAnimation(mesh, 0, 120, false, speed);
       }
 
-      function animatePositionTwo(mesh, newPositionMid, newPositionEnd, speed) {
-        var positionAnimation = new BABYLON.Animation(
-          "positionAnimation",
-          "position",
-          120,
-          BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
-          BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-        );
-        const keyFrames = [];
-        keyFrames.push({
+      function animateRotation(mesh, speed) {
+        const animateRotationY = new BABYLON.Animation("animateRotationY", "rotation.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+        const animKeys = [];
+
+        animKeys.push({
           frame: 0,
-          value: mesh.position.clone(),
+          value: 0
         });
-        keyFrames.push({
-          frame: 40,
-          value: newPositionMid,
+
+        animKeys.push({
+          frame: 30,
+          value: Math.PI / 16
         });
-        keyFrames.push({
-          frame: 120,
-          value: newPositionEnd,
+
+        animKeys.push({
+          frame: 60,
+          value: 0 
         });
-        positionAnimation.setKeys(keyFrames);
-        const easingFun2 = new BABYLON.CubicEase();
-        easingFun2.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-        positionAnimation.setEasingFunction(easingFun2);
-        mesh.animations.push(positionAnimation);
-        //call animation
-        scene.beginAnimation(mesh, 0, 120, false, speed);
+
+        animateRotationY.setKeys(animKeys);
+        mesh.animations.push(animateRotationY);
+        scene.beginAnimation(mesh, 0, 60, true, speed);
       }
 
       //MOUSE CONTROL - PARALAX FUNCTION
@@ -245,13 +240,16 @@
       let speedOfCar = 0.01
       function visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh) {
         //set iframe
-        document.getElementById("iframePlanet").src = "https://work.quincemedia.com/quicePlanetGame/";
+        document.getElementById("iframePlanet").src = "https://veljko85.github.io/quincePlanetGame/";
         // move astronaut
         animatePosition(scene.getMeshByName('Astronaut_primitive0'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive0').position.x + 800, scene.getMeshByName('Astronaut_primitive0').position.y, scene.getMeshByName('Astronaut_primitive0').position.z), 0.3)
-        animatePosition(scene.getMeshByName('Astronaut_primitive1'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive0').position.x + 800, scene.getMeshByName('Astronaut_primitive0').position.y, scene.getMeshByName('Astronaut_primitive0').position.z), 0.3)
+        animatePosition(scene.getMeshByName('Astronaut_primitive1'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive1').position.x + 800, scene.getMeshByName('Astronaut_primitive1').position.y, scene.getMeshByName('Astronaut_primitive1').position.z), 0.3)
+        setTimeout(() => {
+          scene.getMeshByName('Astronaut_primitive0').isVisible = scene.getMeshByName('Astronaut_primitive1').isVisible = false
+        }, 1000);
         //start animation
         scene.registerBeforeRender(function speedCar() {
-         
+
           //SPEED CAR WHEN CLICKED
           //add speed
           speedOfCar += 0.001
@@ -297,6 +295,7 @@
                     if (scene.fogStart < 600) {
                       scene.getMeshByName("ring").visibility -= 0.02
                       createdPlanet.visibility -= 0.02
+                      scene.getMeshByName("nebula").visibility -= 0.2
                       // result[1].meshes.forEach(mesh => {
                       //   mesh.visibility -= 0.02
                       // });
@@ -307,7 +306,7 @@
                     setTimeout(() => {
                       document.getElementById("webGameIframe").style.zIndex = 2
                       document.getElementById("canvasZone").style.zIndex = 1
-                      document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://work.quincemedia.com/quicePlanetGame/")
+                      document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://veljko85.github.io/quincePlanetGame/")
                       scene.dispose()
                       document.getElementById("canvasZone").style.display = "none"
                     }, 2000);
@@ -364,6 +363,7 @@
       ]);
       //YUGO
       let yugoRoot = result[1].meshes[0]
+
       yugoRoot.addRotation(0, Math.PI, 0)
       scene.getMeshByName("Vatra").scaling = new BABYLON.Vector3(1, 1, 2)
       //set color
@@ -389,7 +389,7 @@
         fakeRotatingMesh.addRotation(0, 0.01, 0)
       })
       fakeRotatingMesh.addChild(yugoRoot)
-      yugoRoot.position = new BABYLON.Vector3(8, 0.1, 0)
+      yugoRoot.position = new BABYLON.Vector3(10, 0.1, 0)
       yugoRoot.addRotation(0.25, 0, 0.3)
 
       //LIGHTS
@@ -437,6 +437,8 @@
       scene.getMeshByName("ring").rotation.x = 0.25
       scene.getMeshByName("ring").rotation.y = 0
       scene.getMeshByName("ring").rotation.z = 0.3
+
+      animateRotation(scene.getMeshByName("ring"), 0.1)
       //set planet visibility to false
       scene.getMeshByName("mars").isVisible = false;
       //create planet
@@ -449,12 +451,15 @@
       createdPlanet.position = new BABYLON.Vector3(-5, 0, 0)
       createdPlanet.addRotation(Math.PI + 0.4, 0, 0)
 
+      animateRotation(createdPlanet, 0.1)
+
+
       var fakeYugoFlyOff = new BABYLON.MeshBuilder.CreateSphere(
         "fakeYugoFlyOff",
         { diameter: 3 },
         scene
       );
-      fakeYugoFlyOff.position = new BABYLON.Vector3(-13, 3, 0)
+      fakeYugoFlyOff.position = new BABYLON.Vector3(-15, 3, 0)
       fakeYugoFlyOff.visibility = 0
 
       var fakeYugo = new BABYLON.CreateBox(
@@ -466,7 +471,8 @@
       fakeYugo.visibility = 0
 
       //nNEBULA POSITION
-      scene.getMeshByName("nebula").position = new BABYLON.Vector3(-0.1, 0, 0)
+      scene.getMeshByName("nebula").position = new BABYLON.Vector3(-0.2, 0.08, -0.3)
+      scene.getMaterialByName('hiclipart.com.001').emissiveColor = BABYLON.Color3.FromHexString("#acccfb");
 
       //SET WAVE WHEN ASTRONAUT FACING CAMERA
       let astronautViewPoint = new BABYLON.MeshBuilder.CreateBox(
