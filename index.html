@@ -240,7 +240,7 @@
       let speedOfCar = 0.01
       function visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh) {
         //set iframe
-        document.getElementById("iframePlanet").src = "https://veljko85.github.io/quincePlanetGame/";
+        document.getElementById("iframePlanet").src = "https://work.quincemedia.com/quicePlanetGame/";
         // move astronaut
         animatePosition(scene.getMeshByName('Astronaut_primitive0'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive0').position.x + 800, scene.getMeshByName('Astronaut_primitive0').position.y, scene.getMeshByName('Astronaut_primitive0').position.z), 0.3)
         animatePosition(scene.getMeshByName('Astronaut_primitive1'), new BABYLON.Vector3(scene.getMeshByName('Astronaut_primitive1').position.x + 800, scene.getMeshByName('Astronaut_primitive1').position.y, scene.getMeshByName('Astronaut_primitive1').position.z), 0.3)
@@ -306,9 +306,9 @@
                     setTimeout(() => {
                       document.getElementById("webGameIframe").style.zIndex = 2
                       document.getElementById("canvasZone").style.zIndex = 1
-                      document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://veljko85.github.io/quincePlanetGame/")
-                      scene.dispose()
-                      document.getElementById("canvasZone").style.display = "none"
+                      document.getElementById("iframePlanet").contentWindow.postMessage("true", "https://work.quincemedia.com/quicePlanetGame/")
+                      // scene.dispose()
+                      // document.getElementById("canvasZone").style.display = "none"
                     }, 2000);
                   }, 5000);
                 }, 3000);
@@ -329,7 +329,7 @@
       //FOG
       scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
 
-      scene.fogColor = BABYLON.Color3.FromHexString("#fbc6a9");
+      scene.fogColor = BABYLON.Color3.FromHexString("#ACA689");
       scene.fogDensity = 0.01;//0.01
 
       //Only if LINEAR
@@ -472,6 +472,7 @@
 
       //nNEBULA POSITION
       scene.getMeshByName("nebula").position = new BABYLON.Vector3(-0.2, 0.08, -0.3)
+      scene.getMaterialByName('hiclipart.com.001').emissiveIntensity = 0.5
       scene.getMaterialByName('hiclipart.com.001').emissiveColor = BABYLON.Color3.FromHexString("#acccfb");
 
       //SET WAVE WHEN ASTRONAUT FACING CAMERA
