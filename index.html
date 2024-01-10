@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Babylon.js sample code</title>
+  <title>Quince Hero Page</title>
   <!-- lootie -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.4/lottie_svg.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.4/lottie_svg.min.js"></script> -->
   <!-- Babylon.js - cds -->
   <script src="https://cdn.jsdelivr.net/npm/babylonjs@6.0.0/babylon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/babylonjs-materials@6.0.0/babylonjs.materials.min.js"></script>
@@ -23,39 +23,37 @@
       padding: 0;
     }
 
+    @keyframes spin {
+      0% {
+        transform: rotate(0);
+      }
 
-    /* #alpha, #beta {
-        position: absolute;
-        left: 20px;
-        font-size: 70px;
+      100% {
+        transform: rotate(360deg);
+      }
     }
-    #alpha {
-        top: 100px;
-    }
-    #beta {
-        top: 200px;
-    } */
   </style>
 
 </head>
 
 <body>
   <div id="wordpress-cont"
-    style="width: 100vw; height: 100vh; position: relative; background-color: rgb(255, 255, 255);cursor: none;">
-    <div id="customLoadingScreenDiv"
-      style="  width: 100%; height: 100%; background-color: #ffffff; z-index: 100; position: absolute; top: 0; left: 0;">
-      <div id="lottieWraper"
-        style="  width: 2.6vw; height: 2.6vw; top: calc(50% - 1.3vw); left: calc(50% - 1.3vw); position: absolute; transform: translate(-50%, -50%);">
+    style="width: 100vw; height: 100vh; position: relative; background-color: rgb(0, 0, 0);cursor: none;">
+    <!-- loading spinner -->
+    <div id="loadingSpinner"
+      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgb(0, 0, 0); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+      <div
+        style="border: 4px solid rgba(0, 0, 0, 0.1); width: 50px; height: 50px; border-radius: 50%; border-left-color: #f5ec00; animation: spin 1s linear infinite; @keyframes spin {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}">
       </div>
     </div>
     <!-- <div id="cover" style="position: absolute; background-color: rgb(1, 1, 1, 0); z-index: 1000; width: 100%; height: 100%; display: none;"></div> -->
     <div id="canvasZone" style="width: 100%; height: 100%; position: absolute; z-index: 2;"><canvas id="renderCanvas"
         style="  width: 100%; height: 100%; touch-action: none; outline: none !important;"></canvas></div>
-    <p id='fps'
+    <!-- <p id='fps'
       style="position: absolute; top: 50px; left: 50px; font-size: 20px; color: rgb(255, 255, 255); z-index: 1000;">1111
-    </p>
+    </p> -->
     <div id="webGameIframe"
-      style="height: 100%; width: 100%; background-color: rgb(255, 255, 255); position: absolute;z-index: 1;"><iframe
+      style="height: 100%; width: 100%; background-color: rgb(0, 0, 0); position: absolute;z-index: 1;"><iframe
         id="iframePlanet" style="height: 100%; width: 100%;"></iframe></div>
 
     <!-- #eab99e -->
@@ -81,33 +79,14 @@
 
     //FOR LOADING
     BABYLON.DefaultLoadingScreen.prototype.displayLoadingUI = function () {
-      if (document.getElementById("customLoadingScreenDiv")) {
+      if (document.getElementById('customLoadingScreenDiv')) {
         // Do not add a loading screen if there is already one
-        document.getElementById("customLoadingScreenDiv").style.display = "initial";
+        document.getElementById('customLoadingScreenDiv').style.display = 'initial';
         return;
       }
     };
-    //lottie
-    let animItem = bodymovin.loadAnimation({
-      wrapper: document.getElementById("lottieWraper"),
-      animType: "svg",
-      loop: true,
-      path: "https://raw.githubusercontent.com/thesvbd/Lottie-examples/master/assets/animations/loading.json",
-    });
-    animItem.resize();
-    animItem.addEventListener("DOMLoaded", function () {
-      animItem.playSegments(
-        [
-          [0, 100],
-          [32, 100],
-        ],
-        true
-      );
-    });
-
     BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI = function () {
-      document.getElementById("customLoadingScreenDiv").style.display = "none";
-      // console.log("scene is now loaded");
+      document.getElementById('loadingSpinner').remove();
     };
     //end of loading
 
@@ -124,10 +103,10 @@
       scene.clearColor = BABYLON.Color3.FromHexString("#15110d");
 
       //FPS
-      var fps = document.getElementById('fps');
-      setInterval(function () {
-        fps.innerHTML = `${engine.getFps()} fps, ${document.activeElement.id}`
-      }, 1000)
+      // var fps = document.getElementById('fps');
+      // setInterval(function () {
+      //   fps.innerHTML = `${engine.getFps()} fps, ${document.activeElement.id}`
+      // }, 1000)
       //CAMERA
       let camera = new BABYLON.ArcRotateCamera(
         'camera1',
@@ -182,9 +161,9 @@
         //call animation
         scene.beginAnimation(mesh, 0, 120, false, speed);
       }
-
-      function animateRotation(mesh, speed) {
-        const animateRotationY = new BABYLON.Animation("animateRotationY", "rotation.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+      //ANIMATE ROTATION Z
+      function animateRotationZ(mesh, rotation, speed) {
+        const animateRotationZ = new BABYLON.Animation("animateRotationZ", "rotation.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
 
         const animKeys = [];
 
@@ -195,7 +174,7 @@
 
         animKeys.push({
           frame: 30,
-          value: Math.PI / 16
+          value: rotation
         });
 
         animKeys.push({
@@ -203,8 +182,37 @@
           value: 0
         });
 
-        animateRotationY.setKeys(animKeys);
-        mesh.animations.push(animateRotationY);
+        animateRotationZ.setKeys(animKeys);
+        mesh.animations.push(animateRotationZ);
+        scene.beginAnimation(mesh, 0, 60, true, speed);
+      }
+
+      //ANIMATE ROTATION Z FOR LETTERS
+      function animateRotationZLetters(mesh, rotationStart, rotationEnd, speed) {
+        const animateRotationZLetters = new BABYLON.Animation("animateRotationZLetters", "rotation.z", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+        const animKeys = [];
+
+        animKeys.push({
+          frame: 0,
+          value: 0
+        });
+
+        animKeys.push({
+          frame: 30,
+          value: rotationEnd
+        });
+
+        animKeys.push({
+          frame: 60,
+          value: 0
+        });
+
+        animateRotationZLetters.setKeys(animKeys);
+        const easingFun2 = new BABYLON.CubicEase();
+        easingFun2.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+        animateRotationZLetters.setEasingFunction(easingFun2);
+        mesh.animations.push(animateRotationZLetters);
         scene.beginAnimation(mesh, 0, 60, true, speed);
       }
 
@@ -309,9 +317,12 @@
                       scene.getMeshByName("ring").visibility -= 0.02
                       createdPlanet.visibility -= 0.02
                       scene.getMeshByName("nebula").visibility -= 0.2
-                      // result[1].meshes.forEach(mesh => {
-                      //   mesh.visibility -= 0.02
-                      // });
+                      result[2].meshes.forEach(mesh => {
+                        mesh.visibility -= 0.02
+                      });
+                      result[3].meshes.forEach(mesh => {
+                        mesh.visibility -= 0.02
+                      });
                     }
                   });
                   setTimeout(() => {
@@ -339,7 +350,7 @@
         "025.env",
         scene
       );
-      scene.environmentIntensity = 1;
+      scene.environmentIntensity = 2;
 
       //FOG
       scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
@@ -369,23 +380,116 @@
       skybox.material = skyboxMaterial;
 
 
-      //IMPORT GLB
+      //IMPORT GLB //////////////////////////////////////////////////////////////////////////
       let result = await Promise.all([
         BABYLON.SceneLoader.ImportMeshAsync("", "scene10.glb", null, scene, (evt) => {
         }),
         BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "yugo.glb", null, scene, (evt) => {
         }),
+        BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "Welcome3.glb", null, scene, (evt) => {
+        }),
+        BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "enterQuincePlanet.glb", null, scene, (evt) => {
+        }),
       ]);
-      //YUGO
+
+      //GLOW////////////////////////////////////////////////////////////////////////////////
+      var glow = new BABYLON.GlowLayer("glow", scene);
+      glow.intensity = 2;
+
+      //ENTER PLANET////////////////////////////////////////////////////////////////////////////////
+      let enterPlanetRoot = result[3].meshes[0]
+      enterPlanetRoot.position = new BABYLON.Vector3(-5, 0, 6)
+      enterPlanetRoot.scaling = new BABYLON.Vector3(2, 2, 2);
+      //set for mobile
+      if (canvas.width < canvas.height) {
+        enterPlanetRoot.position = new BABYLON.Vector3(-2.5, 4, 6)
+        enterPlanetRoot.scaling = new BABYLON.Vector3(2.5, 2.5, 2.5);
+      }
+
+      var enterPlanetMat = new BABYLON.PBRMaterial("enterPlanetMat", scene);
+      enterPlanetMat.albedoColor = new BABYLON.Color3(1, 1, 1);
+      enterPlanetMat.emissiveColor = BABYLON.Color3.FromHexString("#ffff00");
+      enterPlanetMat.emissiveIntensity = 0.1
+
+      result[3].meshes.forEach(mesh => {
+        mesh.material = enterPlanetMat
+      });
+
+      let fakeEnterPlanet = new BABYLON.CreateBox(
+        "fakeEnterPlanet",
+        { width: 2.6, height: 1.5, depth: 0.5 },
+        scene
+      )
+      fakeEnterPlanet.position = new BABYLON.Vector3(-5.2, 0.1, 6)
+      if (canvas.width < canvas.height) {
+        fakeEnterPlanet.position = new BABYLON.Vector3(-2.7, 4, 6)
+        fakeEnterPlanet.scaling = new BABYLON.Vector3(1.3, 1.5, 1);
+      }
+      fakeEnterPlanet.visibility = 0
+
+      fakeEnterPlanet.actionManager = new BABYLON.ActionManager(scene);
+
+      fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function () {
+        enterPlanetMat.emissiveIntensity = 0.2
+      }));
+
+      fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function () {
+        enterPlanetMat.emissiveIntensity = 0.1
+      }));
+
+      fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger, function () {
+        visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh)
+      }));
+
+      //WELCOME////////////////////////////////////////////////////////////////////////////////
+      let welcomeRoot = result[2].meshes[0]
+      welcomeRoot.position = new BABYLON.Vector3(13, 5, -10)
+      welcomeRoot.scaling = new BABYLON.Vector3(4, 4, 4);
+      //set for mobile
+      if (canvas.width < canvas.height) {
+        welcomeRoot.position = new BABYLON.Vector3(4, -2.5, -10)
+        welcomeRoot.scaling = new BABYLON.Vector3(3, 3, 3);
+      }
+
+      // scene.getMaterialByName("Material.001").albedoColor = BABYLON.Color3.FromHexString("#B5FF00");
+      // scene.getMaterialByName("Material.001").emissiveColor = BABYLON.Color3.FromHexString("#000000");
+      scene.getMaterialByName("Material.001").emissiveTexture = scene.getMaterialByName("Material.001").albedoTexture;
+
+      for (let i = 1; i < result[2].meshes.length; i++) {
+        result[2].meshes[i].material.emissiveIntensity = 0.3
+      }
+      //animations
+      result[2].animationGroups[0].stop()
+
+      function handleLettersAnimations(letter) {
+        letter.animations = []
+        letter.rotationQuaternion = null;
+        letter.addRotation(Math.PI / 2, 0, 0)
+        animateRotationZLetters(letter, 0, 0.5, 0.3)
+      }
+
+      setTimeout(() => {
+        for (let i = 0; i < result[2].animationGroups.length; i++) {
+          result[2].animationGroups[i].play(false)
+        }
+        setTimeout(() => {
+          for (let i = 0; i < result[2].meshes.length; i++) {
+            if (result[2].meshes[i].name.startsWith("welcome")) {
+              setTimeout(() => {
+                handleLettersAnimations(scene.getMeshByName(`${result[2].meshes[i].name}`))
+              }, i * 200);
+            }
+          }
+        }, 5000);
+      }, 7000);
+
+      //YUGO///////////////////////////////////////////////////////////////////////////
       let yugoRoot = result[1].meshes[0]
 
       yugoRoot.addRotation(0, Math.PI, 0)
       scene.getMeshByName("Vatra").scaling = new BABYLON.Vector3(1, 1, 2)
       //set color
       scene.getMaterialByName('paint').albedoColor = BABYLON.Color3.FromHexString("#357A20");
-      //set glow
-      var glow = new BABYLON.GlowLayer("glow", scene);
-      glow.intensity = 2;
       //set emissive color of car lights
       scene.getMaterialByName('headlights').emissiveColor = BABYLON.Color3.FromHexString("#FCF55F");
       scene.getMaterialByName('Material.001').emissiveIntensity = 0.5
@@ -453,7 +557,7 @@
       scene.getMeshByName("ring").rotation.y = 0
       scene.getMeshByName("ring").rotation.z = 0.3
 
-      animateRotation(scene.getMeshByName("ring"), 0.1)
+      animateRotationZ(scene.getMeshByName("ring"), Math.PI / 16, 0.1)
       //set planet visibility to false
       scene.getMeshByName("mars").isVisible = false;
       //create planet
@@ -466,7 +570,7 @@
       createdPlanet.position = new BABYLON.Vector3(-5, 0, 0)
       createdPlanet.addRotation(Math.PI + 0.4, 0, 0)
 
-      animateRotation(createdPlanet, 0.1)
+      animateRotationZ(createdPlanet, Math.PI / 16, 0.1)
 
 
       var fakeYugoFlyOff = new BABYLON.MeshBuilder.CreateSphere(
@@ -619,19 +723,19 @@
       // let mainOpacity = 1;
 
       ///////////////////////////////////////////////////////////////////////////////////CLICK PLANET
-      createdPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger, function () {
-        // document.getElementById("iframePlanet").src="https://work.quincemedia.com/robotWebGame/";
-        // animatePosition(cameraTarget, new BABYLON.Vector3(-5,1,0))
-        // setTimeout(() => {
-        //   document.getElementById("canvasZone").animate([{opacity:1},{opacity:0}],2000);
-        //   setTimeout(() => {
-        //     document.getElementById("webGameIframe").style.zIndex = 2
-        //     document.getElementById("exitGame").style.zIndex = 3
-        //     document.getElementById("canvasZone").style.zIndex = 1
-        //   }, 2000);
-        // }, 2000);
-        visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh)
-      }));
+      // createdPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger, function () {
+      //   // document.getElementById("iframePlanet").src="https://work.quincemedia.com/robotWebGame/";
+      //   // animatePosition(cameraTarget, new BABYLON.Vector3(-5,1,0))
+      //   // setTimeout(() => {
+      //   //   document.getElementById("canvasZone").animate([{opacity:1},{opacity:0}],2000);
+      //   //   setTimeout(() => {
+      //   //     document.getElementById("webGameIframe").style.zIndex = 2
+      //   //     document.getElementById("exitGame").style.zIndex = 3
+      //   //     document.getElementById("canvasZone").style.zIndex = 1
+      //   //   }, 2000);
+      //   // }, 2000);
+      //   visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh)
+      // }));
 
       /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -649,6 +753,8 @@
         lightSphere.position = lightSphereLight.position
 
         // console.log(camera.position)
+
+        // scene.getMeshByName("welcome.003").addRotation(0, 0, -0.002)
 
       });
 
