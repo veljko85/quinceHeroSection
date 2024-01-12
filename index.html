@@ -7,45 +7,50 @@
 
   <title>Quince Hero Page</title>
   <!-- lootie -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.4/lottie_svg.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.6.4/lottie_svg.min.js"></script>
   <!-- Babylon.js - cds -->
   <script src="https://cdn.jsdelivr.net/npm/babylonjs@6.0.0/babylon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/babylonjs-materials@6.0.0/babylonjs.materials.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@6.0.0/babylonjs.loaders.min.js"></script>
 
-  <style>
-    html,
-    body {
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
-
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&family=Inter:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <div id="wordpress-cont"
     style="width: 100vw; height: 100vh; position: relative; background-color: rgb(0, 0, 0);cursor: none;">
-    <!-- loading spinner -->
-    <div id="loadingSpinner"
-      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgb(0, 0, 0); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-      <div
-        style="border: 4px solid rgba(0, 0, 0, 0.1); width: 50px; height: 50px; border-radius: 50%; border-left-color: #f5ec00; animation: spin 1s linear infinite; @keyframes spin {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}">
+    <!-- LOADING -->
+    <div id="customLoadingScreenDiv">
+      <div id="lottieWraper"></div>
+
+      <div id="loadingText">
+        <div id="loadingPercentages">0%</div>
+        <div class="css-typing">
+          <p>
+            LOADING
+          </p>
+          <p>
+            INTERACTIVE
+          </p>
+          <p>
+            EXPERIENCE
+          </p>
+        </div>
       </div>
     </div>
+    <!-- loading spinner -->
+    <!-- <div id="loadingSpinner"
+      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgb(0, 0, 0); z-index: 9999; display: flex; justify-content: center; align-items: center;"> -->
+    <!-- <div
+        style="border: 4px solid rgba(0, 0, 0, 0.1); width: 50px; height: 50px; border-radius: 50%; border-left-color: #f5ec00; animation: spin 1s linear infinite; @keyframes spin {0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);}}">
+      </div> -->
+    <!-- <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="loadingGif4.gif" alt="Computer man" style="width:100%;height:100%;">
+      </div> -->
+    <!-- </div> -->
     <!-- <div id="cover" style="position: absolute; background-color: rgb(1, 1, 1, 0); z-index: 1000; width: 100%; height: 100%; display: none;"></div> -->
     <div id="canvasZone" style="width: 100%; height: 100%; position: absolute; z-index: 2;"><canvas id="renderCanvas"
         style="  width: 100%; height: 100%; touch-action: none; outline: none !important;"></canvas></div>
@@ -79,14 +84,40 @@
 
     //FOR LOADING
     BABYLON.DefaultLoadingScreen.prototype.displayLoadingUI = function () {
-      if (document.getElementById('customLoadingScreenDiv')) {
+      if (document.getElementById("customLoadingScreenDiv")) {
         // Do not add a loading screen if there is already one
-        document.getElementById('customLoadingScreenDiv').style.display = 'initial';
+        // document.getElementById("customLoadingScreenDiv").style.display = "initial";
         return;
       }
     };
+    //lottie
+    let animItem = bodymovin.loadAnimation({
+      wrapper: document.getElementById("lottieWraper"),
+      animType: "svg",
+      loop: true,
+      // rendererSettings: {
+      //   progressiveLoad: false,
+      //   preserveAspectRatio: "xMidYMid meet",
+      //   viewBoxSize: "10 10 10 10",
+      // },
+      path: "astronaut2.json",
+    });
+    animItem.resize();
+    animItem.addEventListener("DOMLoaded", function () {
+      animItem.playSegments(
+        [
+          // [0, 100],
+          // [0, 70],
+        ],
+        true
+      );
+    });
     BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI = function () {
-      document.getElementById('loadingSpinner').remove();
+      customLoadingScreenDiv.classList.add("fade");
+      setTimeout(() => {
+        customLoadingScreenDiv.classList.remove("fade");
+        document.getElementById('customLoadingScreenDiv').style.display = 'none';
+      }, 1900);
     };
     //end of loading
 
@@ -381,14 +412,57 @@
 
 
       //IMPORT GLB //////////////////////////////////////////////////////////////////////////
+      let gameEnvLoadedPercent = 0;
+      let playerLoadedPercent = 0;
+      let combLoadedPercent = 0;
       let result = await Promise.all([
-        BABYLON.SceneLoader.ImportMeshAsync("", "scene10.glb", null, scene, (evt) => {
+        BABYLON.SceneLoader.ImportMeshAsync(
+          "",
+          "scene10.glb",
+          null,
+          scene,
+          (evt) => {
+            if (evt.lengthComputable) {
+              gameEnvLoadedPercent = (evt.loaded * 100) / evt.total / 2;
+              combLoadedPercent = (
+                gameEnvLoadedPercent + playerLoadedPercent
+              ).toFixed();
+            } else {
+              const dlCount = evt.loaded / (1024 * 1024);
+              gameEnvLoadedPercent = Math.floor(dlCount * 100.0) / 100.0;
+              combLoadedPercent = (
+                gameEnvLoadedPercent + playerLoadedPercent
+              ).toFixed();
+            }
+            // console.log(combLoadedPercent)
+            loadingPercentages.innerHTML = `${combLoadedPercent}%`
+          }
+        ),
+        BABYLON.SceneLoader.ImportMeshAsync("", "yugo.glb", null, scene, (evt) => {
+          if (evt.lengthComputable) {
+            playerLoadedPercent = (evt.loaded * 100) / evt.total / 2;
+            combLoadedPercent = (
+              gameEnvLoadedPercent + playerLoadedPercent
+            ).toFixed();
+          } else {
+            const dlCount = evt.loaded / (1024 * 1024);
+            playerLoadedPercent = Math.floor(dlCount * 100.0) / 100.0;
+            combLoadedPercent = (
+              gameEnvLoadedPercent + playerLoadedPercent
+            ).toFixed();
+          }
+          // console.log(combLoadedPercent)
+          loadingPercentages.innerHTML = `${combLoadedPercent}%`
         }),
-        BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "yugo.glb", null, scene, (evt) => {
-        }),
+        // BABYLON.SceneLoader.ImportMeshAsync("", "scene10.glb", null, scene, (evt) => {
+        // }),
+        // BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "yugo.glb", null, scene, (evt) => {
+        // }),
         BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "Welcome3.glb", null, scene, (evt) => {
         }),
-        BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "enterQuincePlanet.glb", null, scene, (evt) => {
+        // BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "enterQuincePlanet.glb", null, scene, (evt) => {
+        // }),
+        BABYLON.SceneLoader.ImportMeshAsync(/*"https://raw.githubusercontent.com/veljko85/quinceHeroSection/ghpages/"*/"", "clickHere3.glb", null, scene, (evt) => {
         }),
       ]);
 
@@ -406,8 +480,9 @@
         enterPlanetRoot.scaling = new BABYLON.Vector3(2.5, 2.5, 2.5);
       }
 
-      var enterPlanetMat = new BABYLON.PBRMaterial("enterPlanetMat", scene);
-      enterPlanetMat.albedoColor = new BABYLON.Color3(1, 1, 1);
+      var enterPlanetMat = new BABYLON.StandardMaterial("enterPlanetMat", scene);
+      enterPlanetMat.albedoColor = new BABYLON.Color3.FromHexString("#ffff00");
+      enterPlanetMat.specularColor = new BABYLON.Color3.FromHexString("#000000");
       enterPlanetMat.emissiveColor = BABYLON.Color3.FromHexString("#ffff00");
       enterPlanetMat.emissiveIntensity = 0.1
 
@@ -417,10 +492,10 @@
 
       let fakeEnterPlanet = new BABYLON.CreateBox(
         "fakeEnterPlanet",
-        { width: 2.6, height: 1.5, depth: 0.5 },
+        { width: 2.6, height: 1.7, depth: 0.5 },
         scene
       )
-      fakeEnterPlanet.position = new BABYLON.Vector3(-5.2, 0.1, 6)
+      fakeEnterPlanet.position = new BABYLON.Vector3(-5.2, 0, 6)
       if (canvas.width < canvas.height) {
         fakeEnterPlanet.position = new BABYLON.Vector3(-2.7, 4, 6)
         fakeEnterPlanet.scaling = new BABYLON.Vector3(1.3, 1.5, 1);
@@ -430,7 +505,7 @@
       fakeEnterPlanet.actionManager = new BABYLON.ActionManager(scene);
 
       fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function () {
-        enterPlanetMat.emissiveIntensity = 0.2
+        enterPlanetMat.emissiveIntensity = 0.3
       }));
 
       fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function () {
