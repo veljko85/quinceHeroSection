@@ -1,7 +1,0 @@
-1. ubrzavanje juga secka zbog ucitavanja quince planete
-
-2. gde da klikne da bi otislo na planetu
-
-3. 3d slova velkome
-
-4. loading drugi
