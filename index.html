@@ -465,14 +465,11 @@
                 gameEnvLoadedPercent + playerLoadedPercent
               ).toFixed();
             } else {
-              const dlCount = evt.loaded / (1024 * 1024);
-              // console.log(dlCount)
-              gameEnvLoadedPercent = Math.floor(dlCount * 100.0) / 100.0;
+              gameEnvLoadedPercent = (evt.loaded * 100) / 2238136 / 2;
               combLoadedPercent = (
                 gameEnvLoadedPercent + playerLoadedPercent
               ).toFixed();
             }
-            // console.log(gameEnvLoadedPercent)
             loadingPercentages.innerHTML = `${combLoadedPercent}%`
           }
         ),
@@ -483,13 +480,11 @@
               gameEnvLoadedPercent + playerLoadedPercent
             ).toFixed();
           } else {
-            const dlCount = evt.loaded / (1024 * 1024);
-            playerLoadedPercent = Math.floor(dlCount * 100.0) / 100.0;
+            playerLoadedPercent = (evt.loaded * 100) / 1269172 / 2;
             combLoadedPercent = (
               gameEnvLoadedPercent + playerLoadedPercent
             ).toFixed();
           }
-          // console.log(combLoadedPercent)
           loadingPercentages.innerHTML = `${combLoadedPercent}%`
         }),
         // BABYLON.SceneLoader.ImportMeshAsync("", "scene10.glb", null, scene, (evt) => {
