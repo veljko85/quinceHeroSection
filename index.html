@@ -42,10 +42,12 @@
 </head>
 
 <body>
+
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KVBW6D6" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
+
   <div id="wordpress-cont"
     style="width: 100vw; height: 100vh; position: relative; background-color: rgb(0, 0, 0);cursor: none;">
     <!-- LOADING -->
@@ -464,12 +466,13 @@
               ).toFixed();
             } else {
               const dlCount = evt.loaded / (1024 * 1024);
+              // console.log(dlCount)
               gameEnvLoadedPercent = Math.floor(dlCount * 100.0) / 100.0;
               combLoadedPercent = (
                 gameEnvLoadedPercent + playerLoadedPercent
               ).toFixed();
             }
-            // console.log(combLoadedPercent)
+            // console.log(gameEnvLoadedPercent)
             loadingPercentages.innerHTML = `${combLoadedPercent}%`
           }
         ),
@@ -1010,7 +1013,7 @@
         //push loading time to analytics
         clearInterval(loadingSecondsInterval)
         gtag('event', 'loading_time', {
-          'loading_time': `${secondsToLoad.toFixed(1)} sec`,
+          'time_to_load': `${secondsToLoad.toFixed(1)} sec`,
         });
         function handleTabActivnesShare() {
           if (!document.hidden) {
@@ -1097,7 +1100,7 @@
 
           setTimeout(() => {
             gtag('event', 'fps', {
-              'fps': `${engine.getFps().toFixed(0)} fps`,
+              'framePerSecond': `${engine.getFps().toFixed(0)} fps`,
             });
           }, 5000);
 
