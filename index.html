@@ -251,6 +251,9 @@
         });
 
         animateRotationZ.setKeys(animKeys);
+        const easingFun2 = new BABYLON.CubicEase();
+        easingFun2.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+        animateRotationZ.setEasingFunction(easingFun2);
         mesh.animations.push(animateRotationZ);
         scene.beginAnimation(mesh, 0, 60, true, speed);
       }
