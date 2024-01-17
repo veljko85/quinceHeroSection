@@ -2,6 +2,17 @@
 <html>
 
 <head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51ZTGNST9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-Z51ZTGNST9');
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -67,6 +78,14 @@
   <script>
 
     var canvas = document.getElementById("renderCanvas");
+
+    //CHECK LOADING TIME
+    var secondsToLoad = 0;
+    function incrementSeconds() {
+      // console.log(secondsToLoad)
+      secondsToLoad += 0.1;
+    }
+    var loadingSecondsInterval = setInterval(incrementSeconds, 100);
 
     var startRenderLoop = function (engine, canvas) {
       engine.runRenderLoop(function () {
@@ -514,6 +533,10 @@
       }));
 
       fakeEnterPlanet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger, function () {
+        gtag('event', 'clicked_to_play', {
+          'app_name': 'quinceHeroPage',
+          'screen_name': 'heroPage'
+        });
         visitePlanet(result, fakeYugo, fakeYugoFlyOff, lightSphere, starPC, createdPlanet, fakeRotatingMesh)
       }));
 
@@ -982,25 +1005,34 @@
 
       //IMPORT GLB END
       scene.executeWhenReady(() => {
+        //push loading time to analytics
+        clearInterval(loadingSecondsInterval)
+        gtag('event', 'loading_time', {
+          'loading_time': `${secondsToLoad.toFixed(1)} sec`,
+        });
+        //hide loading spiner
+        engine.hideLoadingUI();
+
+        if (canvas.width > canvas.height) {
+          //MOVE CAMERA TO POSITION
+          animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 28.2), 0.3)
+          setTimeout(() => {
+            //MOUSE CONTROL - PARALAX
+            setParalax()
+            //ADD MOUSE LIGHT FUNCTION
+            canvas.addEventListener("mousemove", onMouseMove);
+          }, 3500);
+        } else {
+          //MOVE CAMERA TO POSITION
+          animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 50), 0.3)
+        }
+
         setTimeout(() => {
-          //hide loading spiner
-          engine.hideLoadingUI();
+          gtag('event', 'fps', {
+            'fps': `${engine.getFps().toFixed(0)} fps`,
+          });
+        }, 5000);
 
-          if (canvas.width > canvas.height) {
-            //MOVE CAMERA TO POSITION
-            animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 28.2), 0.3)
-            setTimeout(() => {
-              //MOUSE CONTROL - PARALAX
-              setParalax()
-              //ADD MOUSE LIGHT FUNCTION
-              canvas.addEventListener("mousemove", onMouseMove);
-            }, 3500);
-          } else {
-            //MOVE CAMERA TO POSITION
-            animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 50), 0.3)
-          }
-
-        }, 3000);
         //scene render
         engine.runRenderLoop(() => {
           scene.render();
