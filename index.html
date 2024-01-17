@@ -4,13 +4,13 @@
 <head>
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z51ZTGNST9"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-KVBW6D6"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
-    gtag('config', 'G-Z51ZTGNST9');
+    gtag('config', 'GTM-KVBW6D6');
   </script>
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -567,20 +567,7 @@
         animateRotationZLetters(letter, 0, 0.5, 0.3)
       }
 
-      setTimeout(() => {
-        for (let i = 0; i < result[2].animationGroups.length; i++) {
-          result[2].animationGroups[i].play(false)
-        }
-        setTimeout(() => {
-          for (let i = 0; i < result[2].meshes.length; i++) {
-            if (result[2].meshes[i].name.startsWith("welcome")) {
-              setTimeout(() => {
-                handleLettersAnimations(scene.getMeshByName(`${result[2].meshes[i].name}`))
-              }, i * 200);
-            }
-          }
-        }, 5000);
-      }, 7000);
+
 
       //YUGO///////////////////////////////////////////////////////////////////////////
       let yugoRoot = result[1].meshes[0]
@@ -1010,33 +997,101 @@
         gtag('event', 'loading_time', {
           'loading_time': `${secondsToLoad.toFixed(1)} sec`,
         });
-        //hide loading spiner
-        engine.hideLoadingUI();
+        function handleTabActivnesShare() {
+          if (!document.hidden) {
+            //hide loading spiner
+            engine.hideLoadingUI();
 
-        if (canvas.width > canvas.height) {
-          //MOVE CAMERA TO POSITION
-          animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 28.2), 0.3)
-          setTimeout(() => {
-            //MOUSE CONTROL - PARALAX
-            setParalax()
-            //ADD MOUSE LIGHT FUNCTION
-            canvas.addEventListener("mousemove", onMouseMove);
-          }, 3500);
-        } else {
-          //MOVE CAMERA TO POSITION
-          animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 50), 0.3)
+            if (canvas.width > canvas.height) {
+              //MOVE CAMERA TO POSITION
+              animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 28.2), 0.3)
+              setTimeout(() => {
+                //MOUSE CONTROL - PARALAX
+                setParalax()
+                //ADD MOUSE LIGHT FUNCTION
+                canvas.addEventListener("mousemove", onMouseMove);
+              }, 3500);
+            } else {
+              //MOVE CAMERA TO POSITION
+              animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 50), 0.3)
+            }
+
+            setTimeout(() => {
+              for (let i = 0; i < result[2].animationGroups.length; i++) {
+                result[2].animationGroups[i].play(false)
+              }
+              setTimeout(() => {
+                for (let i = 0; i < result[2].meshes.length; i++) {
+                  if (result[2].meshes[i].name.startsWith("welcome")) {
+                    setTimeout(() => {
+                      handleLettersAnimations(scene.getMeshByName(`${result[2].meshes[i].name}`))
+                    }, i * 200);
+                  }
+                }
+              }, 2000);
+            }, 4000);
+
+            setTimeout(() => {
+              gtag('event', 'fps', {
+                'fps': `${engine.getFps().toFixed(0)} fps`,
+              });
+            }, 5000);
+
+            //scene render
+            engine.runRenderLoop(() => {
+              scene.render();
+            });
+            clearInterval(refreshIntervalIdShare);
+          }
         }
 
-        setTimeout(() => {
-          gtag('event', 'fps', {
-            'fps': `${engine.getFps().toFixed(0)} fps`,
-          });
-        }, 5000);
+        if (document.hidden) {
+          var refreshIntervalIdShare = setInterval(handleTabActivnesShare, 100);
+        } else {
+          //hide loading spiner
+          engine.hideLoadingUI();
 
-        //scene render
-        engine.runRenderLoop(() => {
-          scene.render();
-        });
+          if (canvas.width > canvas.height) {
+            //MOVE CAMERA TO POSITION
+            animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 28.2), 0.3)
+            setTimeout(() => {
+              //MOUSE CONTROL - PARALAX
+              setParalax()
+              //ADD MOUSE LIGHT FUNCTION
+              canvas.addEventListener("mousemove", onMouseMove);
+            }, 3500);
+          } else {
+            //MOVE CAMERA TO POSITION
+            animatePosition(camera, new BABYLON.Vector3(0.254, -2.368, 50), 0.3)
+          }
+
+          setTimeout(() => {
+            for (let i = 0; i < result[2].animationGroups.length; i++) {
+              result[2].animationGroups[i].play(false)
+            }
+            setTimeout(() => {
+              for (let i = 0; i < result[2].meshes.length; i++) {
+                if (result[2].meshes[i].name.startsWith("welcome")) {
+                  setTimeout(() => {
+                    handleLettersAnimations(scene.getMeshByName(`${result[2].meshes[i].name}`))
+                  }, i * 200);
+                }
+              }
+            }, 1000);
+          }, 3000);
+
+          setTimeout(() => {
+            gtag('event', 'fps', {
+              'fps': `${engine.getFps().toFixed(0)} fps`,
+            });
+          }, 5000);
+
+          //scene render
+          engine.runRenderLoop(() => {
+            scene.render();
+          });
+        }
+
       });
 
 
