@@ -476,7 +476,7 @@
             loadingPercentages.innerHTML = `${combLoadedPercent}%`
           }
         ),
-        BABYLON.SceneLoader.ImportMeshAsync("", "yugo.glb", null, scene, (evt) => {
+        BABYLON.SceneLoader.ImportMeshAsync("", "yugo2.glb", null, scene, (evt) => {
           if (evt.lengthComputable) {
             playerLoadedPercent = (evt.loaded * 100) / evt.total / 2;
             combLoadedPercent = (
